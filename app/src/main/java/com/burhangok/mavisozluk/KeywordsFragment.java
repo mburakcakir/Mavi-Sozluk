@@ -49,6 +49,10 @@ public class KeywordsFragment extends Fragment {
             getFragmentManager().popBackStack();
         }
 
+        if(!this.aranacakKelime.isEmpty() && !vt.IsSavedHistory(this.aranacakKelime)){
+            vt.GecmisEkle(this.aranacakKelime);
+        }
+
         KeywordsAdapter keywordsAdapter = new KeywordsAdapter(this.getContext(),sozlukList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());

@@ -18,10 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
          fragmentManager =getSupportFragmentManager();
          fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
 
-        fragmentTransaction.replace(R.id.fragment_area,new SplashFragment());
+        fragmentTransaction.replace(R.id.fragment_area,new HomeFragment());
         fragmentTransaction.commit();
 
     }
