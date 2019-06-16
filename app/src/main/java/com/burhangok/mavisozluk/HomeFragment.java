@@ -4,17 +4,24 @@ package com.burhangok.mavisozluk;
 import android.app.Activity;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -42,6 +49,8 @@ public class HomeFragment extends Fragment {
     HistoryAdapter historyAdapter;
     private Paint p = new Paint();
     Activity mactivity;
+    public String aranacakKelime;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,31 +59,12 @@ public class HomeFragment extends Fragment {
 
         init();
         mactivity = this.getActivity();
-        searchBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String searchedKeyword = keywordET.getText().toString();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("keyword", searchedKeyword);
-
-                KeywordsFragment keywordsFragment = new KeywordsFragment();
-                keywordsFragment.setArguments(bundle);
-
-                fragmentManager = getFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-
-                fragmentTransaction.replace(R.id.fragment_area, keywordsFragment);
-                fragmentTransaction.commit();
-            }
-        });
 
         vt = new Veritabani(this.getContext());
         historySozlukList = vt.GecmisListele();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+      LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         historyAdapter = new HistoryAdapter(this.getContext(), historySozlukList);
@@ -83,12 +73,46 @@ public class HomeFragment extends Fragment {
         listRV.setItemAnimator(new DefaultItemAnimator());
         listRV.setAdapter(historyAdapter);
 
+
+        keywordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                aranacakKelime=s.toString();
+                List<Sozluk> sozlukList = vt.kelimeleriGetir(aranacakKelime);
+
+                if(!aranacakKelime.isEmpty() && !vt.IsSavedHistory(aranacakKelime)){
+                    vt.GecmisEkle(aranacakKelime);
+                }
+
+                KeywordsAdapter keywordsAdapter = new KeywordsAdapter(HomeFragment.this.getContext(),sozlukList);
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeFragment.this.getContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+                listRV.setLayoutManager(linearLayoutManager);
+                listRV.setItemAnimator(new DefaultItemAnimator());
+                listRV.setAdapter(keywordsAdapter);
+
+            }
+        });
+
+
         return fragmentView;
     }
 
     void init() {
         keywordET = fragmentView.findViewById(R.id.searchKeyword);
-        searchBTN = fragmentView.findViewById(R.id.searchBtn);
         listRV = fragmentView.findViewById(R.id.list);
 
     }

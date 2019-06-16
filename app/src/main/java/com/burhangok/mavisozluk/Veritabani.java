@@ -98,7 +98,7 @@ public class Veritabani extends SQLiteOpenHelper {
 
         SQLiteDatabase vt = this.getWritableDatabase();
 
-        String sqlCumlesi = "SELECT * FROM sozluk WHERE English LIKE '" + aranacak + "%' OR Turkish LIKE '" + aranacak + "%' ORDER BY English ";
+        String sqlCumlesi = "SELECT * FROM sozluk WHERE English LIKE '" + aranacak + "%' ORDER BY English ";
         Cursor cursor = vt.rawQuery(sqlCumlesi, null);
 
         while (cursor.moveToNext()) {
