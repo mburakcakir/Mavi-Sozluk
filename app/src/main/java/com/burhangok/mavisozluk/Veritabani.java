@@ -109,6 +109,7 @@ public class Veritabani extends SQLiteOpenHelper {
             kelimeler.add(kelime);
         }
 
+        cursor.close();
         return kelimeler;
 
     }

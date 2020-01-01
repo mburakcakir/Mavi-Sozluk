@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
                 aranacakKelime=s.toString();
                 List<Sozluk> sozlukList = vt.kelimeleriGetir(aranacakKelime);
 
-                if(!aranacakKelime.isEmpty() && !vt.IsSavedHistory(aranacakKelime)){
+                if(!aranacakKelime.isEmpty() && !vt.IsSavedHistory(aranacakKelime) && aranacakKelime.length()>3){
                     vt.GecmisEkle(aranacakKelime);
                 }
 
